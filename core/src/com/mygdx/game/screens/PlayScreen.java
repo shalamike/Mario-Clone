@@ -23,7 +23,7 @@ public class PlayScreen implements Screen {
         texture = new Texture("badlogic.jpg");
         //initiallising a new camera for that will follow us along the world called gameCam
         gameCam = new OrthographicCamera();
-        //creating a fit viewport that would scale the world with the different size of the screen
+        //creating a fit viewport that would maintain the aspect ratio of the world regardless of screen size
         viewport = new FitViewport(800, 400, gameCam);
         // alternate viewports
         /*
@@ -40,7 +40,7 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        game.batch.setProjectionMatrix(gameCam.combined);// this line declares what we are allowed to see in this case its what the camera sees. 
+        game.batch.setProjectionMatrix(gameCam.combined);// this line declares what we are allowed to see in this case its what the camera sees.
         game.batch.begin();
         game.batch.draw(texture, 0,0);
         game.batch.end();
