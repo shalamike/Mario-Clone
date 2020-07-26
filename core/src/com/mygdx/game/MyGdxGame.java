@@ -9,6 +9,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.screens.PlayScreen;
 
 public class MyGdxGame extends Game {
+	// the virtual width and height of the game
+	public static final int V_WIDTH = 400;
+	public static final int V_height = 280;
+
 	public SpriteBatch batch;
 	//Texture img;
 	

@@ -24,7 +24,7 @@ public class PlayScreen implements Screen {
         //initiallising a new camera for that will follow us along the world called gameCam
         gameCam = new OrthographicCamera();
         //creating a fit viewport that would maintain the aspect ratio of the world regardless of screen size
-        viewport = new FitViewport(800, 400, gameCam);
+        viewport = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_height, gameCam);
         // alternate viewports
         /*
         * StretchViewport would stretch out or compress the image to fit the different size screens
