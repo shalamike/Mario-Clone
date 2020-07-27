@@ -24,7 +24,7 @@ public class PlayScreen implements Screen {
 
     private TmxMapLoader mapLoader; //this is what actually loads in our game map
     private TiledMap map; // reference to the map itself
-    private OrthogonalTiledMapRenderer renerer; // this is used to render the map onto our camera
+    private OrthogonalTiledMapRenderer renderer; // this is used to render the map onto our camera
 
 
     public PlayScreen(MyGdxGame game){
@@ -35,15 +35,14 @@ public class PlayScreen implements Screen {
         // alternate viewports
         /*
         * StretchViewport would stretch out or compress the image to fit the different size screens
-        * screen viewports will allow the user to see more or less of the game world depending on the size
+        * Screenviewports will allow the user to see more or less of the game world depending on the size
         * */
         hud = new Hud(game.batch); // initialising the hud taking the game.batch as the argument
 
         mapLoader = new TmxMapLoader();// initiallising the map loader
         map = mapLoader.load("level1.tmx"); // initialising the map using the map loader to load our tiled level
-        renerer = new OrthogonalTiledMapRenderer(map); //rendering the map after it has been loaded
-        gameCam.position.set(gamePort.getScreenWidth()/2 , gamePort.getScreenHeight()/2, 0);
-
+        renderer = new OrthogonalTiledMapRenderer(map); //rendering the map after it has been loaded
+        gameCam.position.set(gamePort.getWorldWidth()/2 , gamePort.getWorldHeight()/2, 0);
 
     }
 
@@ -53,12 +52,25 @@ public class PlayScreen implements Screen {
     }
 
     @Override
-    public void render(float delta) {
+    public void render(float delta) { // this method will visualise what is happening in our game
+        update(delta);
         Gdx.gl.glClearColor(1,0,0,1); //this line clears the screen to a basic red colour whenever clear is glClear is called
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // this line clears the screan to the colur abouve;
 
+        renderer.render();
+
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);// this line declares what we are allowed to see in this case its what the camera sees.
         hud.stage.draw();//this line will display the given parameters defined above
+    }
+
+    public void handleInput(float dt){ // this method will handle any of the users input
+        if(Gdx.input.isTouched()) // this will just check if the screen has been touched for now
+            gameCam.position.x += 100 * dt; // this wil just change the game cam somewhere to see if this works
+    }
+    public void update(float dt){ // this method will update the current scenario of the game based on the user input
+        handleInput(dt); // this line will handle any user inputs
+        gameCam.update(); // this line will update
+        renderer.setView(gameCam); // this line will render only what the camera can see.
     }
 
 
