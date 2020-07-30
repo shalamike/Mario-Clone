@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Sprites.Mario;
 import com.mygdx.game.scenes.Hud;
 
 public class PlayScreen implements Screen {
@@ -38,9 +39,11 @@ public class PlayScreen implements Screen {
     private TmxMapLoader mapLoader; //this is what actually loads in our game map
     private TiledMap map; // reference to the map itself
     private OrthogonalTiledMapRenderer renderer; // this is used to render the map onto our camera
-
-    private World world;
+   // box2d variables
+    private World world;// making a box2d world
     private Box2DDebugRenderer b2dr; // a debug renderer gives a graphical representation of fixtures and bodies
+    // Mario/player variables
+    private Mario player;
 
     public PlayScreen(MyGdxGame game){
         this.game = game;
@@ -54,6 +57,7 @@ public class PlayScreen implements Screen {
         * */
         hud = new Hud(game.batch); // initialising the hud taking the game.batch as the argument
 
+
         // initiallising tiled variables
         mapLoader = new TmxMapLoader();// initiallising the map loader
         map = mapLoader.load("level1.tmx"); // initialising the map using the map loader to load our tiled level
@@ -61,8 +65,15 @@ public class PlayScreen implements Screen {
         gameCam.position.set(gamePort.getWorldWidth()/2 , gamePort.getWorldHeight()/2, 0);
 
         //initialising box2d variables
-        world = new World(new Vector2(0,0), true); //box2d wont calculate physics for objects that are in rest, therefore improving performance
+        /*
+        * the wold class takes 2 parameters,
+        * a vector 2 for the direction of natural forces in the game world i.e gravity
+        * a doSleep boolean where if it is true, box2d wont calculate physics for objects that are in rest. Therefore improving performance*/
+        world = new World(new Vector2(0,-10), true); 
         b2dr = new Box2DDebugRenderer();
+
+        //initialising the mario/ player
+        player = new Mario(world);
 
         BodyDef bdef = new BodyDef(); // this variable defines what a body consists of
         PolygonShape shape = new PolygonShape(); // this defines the shape for our fixtures
@@ -166,6 +177,13 @@ public class PlayScreen implements Screen {
     }
     public void update(float dt){ // this method will update the current scenario of the game based on the user input
         handleInput(dt); // this line will handle any user inputs
+
+        /* updating marios motion using the world.step method which takes the following argument sin the following order
+        * timeStep - the amount of time to simulate, this should not vary.
+        * velocityIterations - for the velocity constraint solver.
+        * positionIterations - for the position constraint solver.*/
+        world.step(1/30f, 8, 2);// this line takes a timestep for calculating marios motions
+
         gameCam.update(); // this line will update
         renderer.setView(gameCam); // this line will render only what the camera can see.
     }
