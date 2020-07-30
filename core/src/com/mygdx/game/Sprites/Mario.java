@@ -14,8 +14,8 @@ public class Mario extends Sprite {
     public Body b2dbody; // box2d body
 
     public Mario(World world){
-        this.world = world;
-
+        this.world = world; //
+        defineMario();
     }
 
     /*
@@ -30,6 +30,6 @@ public class Mario extends Sprite {
         CircleShape shape = new CircleShape(); // creating a circle for our fixture def for now
         shape.setRadius(5); // setting the circles radius to 5
         fdef.shape = shape; // setting our shapes radius to the fixure def
-        b2dbody.createFixture(fdef); // setting the fixture def to our body. 
+        b2dbody.createFixture(fdef); // setting the fixture def to our body.
     }
 }
