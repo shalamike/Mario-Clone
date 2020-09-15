@@ -49,7 +49,7 @@ public class PlayScreen implements Screen {
         this.game = game;
         //texture = new Texture("badlogic.jpg");
         gameCam = new OrthographicCamera();//initiallising a new camera for that will follow us along the world called gameCam
-        gamePort = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_height, gameCam); //creating a fit viewport that would maintain the aspect ratio of the world regardless of screen size
+        gamePort = new FitViewport(MyGdxGame.V_WIDTH/MyGdxGame.PPM, MyGdxGame.V_height/MyGdxGame.PPM, gameCam); //creating a fit viewport that would maintain the aspect ratio of the world regardless of screen size
         // alternate viewports
         /*
         * StretchViewport would stretch out or compress the image to fit the different size screens
@@ -61,7 +61,7 @@ public class PlayScreen implements Screen {
         // initiallising tiled variables
         mapLoader = new TmxMapLoader();// initiallising the map loader
         map = mapLoader.load("level1.tmx"); // initialising the map using the map loader to load our tiled level
-        renderer = new OrthogonalTiledMapRenderer(map); //rendering the map after it has been loaded
+        renderer = new OrthogonalTiledMapRenderer(map, 1/MyGdxGame.PPM); //rendering the map after it has been loaded
         gameCam.position.set(gamePort.getWorldWidth()/2 , gamePort.getWorldHeight()/2, 0);
 
         //initialising box2d variables
@@ -69,7 +69,7 @@ public class PlayScreen implements Screen {
         * the wold class takes 2 parameters,
         * a vector 2 for the direction of natural forces in the game world i.e gravity
         * a doSleep boolean where if it is true, box2d wont calculate physics for objects that are in rest. Therefore improving performance*/
-        world = new World(new Vector2(0,-10), true); 
+        world = new World(new Vector2(0,-10), true);
         b2dr = new Box2DDebugRenderer();
 
         //initialising the mario/ player
@@ -79,6 +79,8 @@ public class PlayScreen implements Screen {
         PolygonShape shape = new PolygonShape(); // this defines the shape for our fixtures
         FixtureDef fdef = new FixtureDef(); // this variables defines the fixtures;
         Body body;
+
+
 
         /*
         * for  every coin, ground, pipe and other tile created in the tiled map editor,
@@ -95,10 +97,10 @@ public class PlayScreen implements Screen {
             * StaticBody unlike the Dynamic body dont move at all. therefore they are not affected by forces
             * KinematicBody are bodies arent necesesarily affeced by forces like gravity but can be affected by velocities. therefore these can move in the map but cannot be moved like moving platforms or pendulums.*/
             bdef.type = BodyDef.BodyType.StaticBody; // next we define our body def
-            bdef.position.set(rect.getX() + rect.getWidth()/2, rect.getY() + rect.getHeight()/2 );// defining the midpoint
+            bdef.position.set((rect.getX() + rect.getWidth()/2) / MyGdxGame.PPM, (rect.getY() + rect.getHeight()/2) / MyGdxGame.PPM );// defining the midpoint
             body = world.createBody(bdef); // now we create the body
             //creating the fixtures
-            shape.setAsBox(rect.getWidth()/2 , rect.getHeight()/2); //getting the midpoint of our rectangle
+            shape.setAsBox((rect.getWidth()/2) / MyGdxGame.PPM , (rect.getHeight()/2)/ MyGdxGame.PPM) ; //getting the midpoint of our rectangle
             fdef.shape = shape;  //setting our fixturedef to the midpoint of the shape.
             body.createFixture(fdef); // setting the fixture of our body
         }
@@ -108,13 +110,13 @@ public class PlayScreen implements Screen {
             /* next we define our body def. In Box2d there are 3 types of bodydefs we can have as follows
              * DynamicBody are bodies that are usually used for players. they are usually affected by forces like gravity and tend to move around a lot (hence the name)
              * StaticBody unlike the Dynamic body dont move at all. therefore they are not affected by forces
-             * KinematicBody are bodies aren't necesesarily affeced by forces like gravity but can be affected by velocities. therefore these can move in the map but cannot be moved like moving platforms or pendulums.*/
+             * KinematicBody are bodies arent necesesarily affeced by forces like gravity but can be affected by velocities. therefore these can move in the map but cannot be moved like moving platforms or pendulums.*/
             bdef.type = BodyDef.BodyType.StaticBody; // next we define our body def
-            bdef.position.set(rect.getX() + rect.getWidth()/2, rect.getY() + rect.getHeight()/2 );// defining the midpoint
+            bdef.position.set((rect.getX() + rect.getWidth()/2) / MyGdxGame.PPM, (rect.getY() + rect.getHeight()/2) / MyGdxGame.PPM );// defining the midpoint
             body = world.createBody(bdef); // now we create the body
             //creating the fixtures
-            shape.setAsBox(rect.getWidth()/2 , rect.getHeight()/2); //getting the midpoint of our rectangle
-            fdef.shape = shape;
+            shape.setAsBox((rect.getWidth()/2) / MyGdxGame.PPM , (rect.getHeight()/2)/ MyGdxGame.PPM) ; //getting the midpoint of our rectangle
+            fdef.shape = shape;  //setting our fixturedef to the midpoint of the shape.
             body.createFixture(fdef); // setting the fixture of our body
         }
         // getting the coins layer
@@ -125,11 +127,11 @@ public class PlayScreen implements Screen {
              * StaticBody unlike the Dynamic body dont move at all. therefore they are not affected by forces
              * KinematicBody are bodies arent necesesarily affeced by forces like gravity but can be affected by velocities. therefore these can move in the map but cannot be moved like moving platforms or pendulums.*/
             bdef.type = BodyDef.BodyType.StaticBody; // next we define our body def
-            bdef.position.set(rect.getX() + rect.getWidth()/2, rect.getY() + rect.getHeight()/2 );// defining the midpoint
+            bdef.position.set((rect.getX() + rect.getWidth()/2) / MyGdxGame.PPM, (rect.getY() + rect.getHeight()/2) / MyGdxGame.PPM );// defining the midpoint
             body = world.createBody(bdef); // now we create the body
             //creating the fixtures
-            shape.setAsBox(rect.getWidth()/2 , rect.getHeight()/2); //getting the midpoint of our rectangle
-            fdef.shape = shape;
+            shape.setAsBox((rect.getWidth()/2) / MyGdxGame.PPM , (rect.getHeight()/2)/ MyGdxGame.PPM) ; //getting the midpoint of our rectangle
+            fdef.shape = shape;  //setting our fixturedef to the midpoint of the shape.
             body.createFixture(fdef); // setting the fixture of our body
         }
 
@@ -172,6 +174,7 @@ public class PlayScreen implements Screen {
     }
 
     public void handleInput(float dt){ // this method will handle any of the users input
+        System.out.println(player.getY());
         if(Gdx.input.isTouched()) // this will just check if the screen has been touched for now
             gameCam.position.x += 100 * dt; // this wil just change the game cam somewhere to see if this works
     }

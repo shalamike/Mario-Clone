@@ -12,6 +12,7 @@ public class MyGdxGame extends Game {
 	// the virtual width and height of the game
 	public static final int V_WIDTH = 400;
 	public static final int V_height = 280;
+	public static final float PPM = 100;
 
 	public SpriteBatch batch;
 	//Texture img;
