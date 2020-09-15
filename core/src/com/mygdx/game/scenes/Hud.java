@@ -8,13 +8,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.MyGdxGame;
 
 
 
-public class Hud {
+public class Hud implements Disposable {
     public Stage stage;
     // making a new camera and new viewport specifically for the hud
     // this is to ensure that the hud stays in place while the game moves
@@ -67,5 +68,10 @@ public class Hud {
 
         stage.addActor(table);
 
+    }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
     }
 }

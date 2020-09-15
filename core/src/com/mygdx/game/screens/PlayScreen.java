@@ -151,6 +151,10 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        map.dispose();
+        world.dispose();
+        renderer.dispose();
+        b2dr.dispose();
+        hud.
     }
 }
