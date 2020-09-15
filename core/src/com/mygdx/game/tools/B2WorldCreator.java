@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Sprites.Coin;
 
 public class B2WorldCreator {
 
@@ -59,35 +60,16 @@ public class B2WorldCreator {
             body.createFixture(fdef); // setting the fixture of our body
         }
         // getting the coins layer
-        for(MapObject object :map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject) object).getRectangle(); // first get the rectangle object itself. in this line we have to typecast the object to a rectangle
-            /* next we define our body def. In Box2d there are 3 types of bodydefs we can have as follows
-             * DynamicBody are bodies that are usually used for players. they are usually affected by forces like gravity and tend to move around a lot (hence the name)
-             * StaticBody unlike the Dynamic body dont move at all. therefore they are not affected by forces
-             * KinematicBody are bodies arent necesesarily affeced by forces like gravity but can be affected by velocities. therefore these can move in the map but cannot be moved like moving platforms or pendulums.*/
-            bdef.type = BodyDef.BodyType.StaticBody; // next we define our body def
-            bdef.position.set((rect.getX() + rect.getWidth()/2) / MyGdxGame.PPM, (rect.getY() + rect.getHeight()/2) / MyGdxGame.PPM );// defining the midpoint
-            body = world.createBody(bdef); // now we create the body
-            //creating the fixtures
-            shape.setAsBox((rect.getWidth()/2) / MyGdxGame.PPM , (rect.getHeight()/2)/ MyGdxGame.PPM) ; //getting the midpoint of our rectangle
-            fdef.shape = shape;  //setting our fixturedef to the midpoint of the shape.
-            body.createFixture(fdef); // setting the fixture of our body
-        }
+        for(MapObject coin :map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle coinRect = ((RectangleMapObject) coin).getRectangle(); // first get the rectangle object itself. in this line we have to typecast the object to a rectangle
 
+            new Coin(world, map, coinRect);
+        }
         //getting the bricks layer
-        for(MapObject object :map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject) object).getRectangle(); // first get the rectangle object itself. in this line we have to typecast the object to a rectangle
-            /* next we define our body def. In Box2d there are 3 types of bodydefs we can have as follows
-             * DynamicBody are bodies that are usually used for players. they are usually affected by forces like gravity and tend to move around a lot (hence the name)
-             * StaticBody unlike the Dynamic body dont move at all. therefore they are not affected by forces
-             * KinematicBody are bodies arent necesesarily affeced by forces like gravity but can be affected by velocities. therefore these can move in the map but cannot be moved like moving platforms or pendulums.*/
-            bdef.type = BodyDef.BodyType.StaticBody; // next we define our body def
-            bdef.position.set(rect.getX() + rect.getWidth()/2, rect.getY() + rect.getHeight()/2 );// defining the midpoint
-            body = world.createBody(bdef); // now we create the body
-            //creating the fixtures
-            shape.setAsBox(rect.getWidth()/2 , rect.getHeight()/2); //getting the midpoint of our rectangle
-            fdef.shape = shape;
-            body.createFixture(fdef); // setting the fixture of our body
+        for(MapObject brick :map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)){
+            Rectangle brickRect = ((RectangleMapObject) brick).getRectangle(); // first get the rectangle object itself. in this line we have to typecast the object to a rectangle
+
+            new Coin(world, map, brickRect);
         }
     }
 }
