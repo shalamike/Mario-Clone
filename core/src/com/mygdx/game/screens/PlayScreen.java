@@ -1,6 +1,7 @@
 package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -175,8 +176,16 @@ public class PlayScreen implements Screen {
 
     public void handleInput(float dt){ // this method will handle any of the users input
         System.out.println(player.getY());
-        if(Gdx.input.isTouched()) // this will just check if the screen has been touched for now
-            gameCam.position.x += 100 * dt; // this wil just change the game cam somewhere to see if this works
+        if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            player.b2dbody.applyLinearImpulse(new Vector2(0,4f), player.b2dbody.getWorldCenter(), true); // with applyLinearImpulse, the first parameter is the direction of the force, the second parameter is the location in the body the force will be applied to (in this case the center), the third parameter will wake the body up if its asleep
+        }// this will just check if the screen has been touched for now
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2dbody.getLinearVelocity().x <= 2){
+            player.b2dbody.applyLinearImpulse(new Vector2(0.1f, 0), player.b2dbody.getWorldCenter(), true);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2dbody.getLinearVelocity().x >= -2){
+            player.b2dbody.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2dbody.getWorldCenter(), true);
+        }
+
     }
     public void update(float dt){ // this method will update the current scenario of the game based on the user input
         handleInput(dt); // this line will handle any user inputs
@@ -186,6 +195,8 @@ public class PlayScreen implements Screen {
         * velocityIterations - for the velocity constraint solver.
         * positionIterations - for the position constraint solver.*/
         world.step(1/30f, 8, 2);// this line takes a timestep for calculating marios motions
+
+        gameCam.position.x = player.b2dbody.getPosition().x;
 
         gameCam.update(); // this line will update
         renderer.setView(gameCam); // this line will render only what the camera can see.
