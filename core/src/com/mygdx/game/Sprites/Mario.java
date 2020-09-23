@@ -1,22 +1,30 @@
 package com.mygdx.game.Sprites;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.screens.PlayScreen;
 
 import sun.java2d.opengl.WGLSurfaceData;
 
 public class Mario extends Sprite {
     public World world; // this will be the world that mario will live inside
     public Body b2dbody; // box2d body
+    private TextureRegion marioStand;
 
-    public Mario(World world){
+    public Mario(World world, PlayScreen screen){
+        super(screen.getAtlas().findRegion("little_mario"));
         this.world = world; //
         defineMario();
+        marioStand = new TextureRegion(getTexture(), 0,0,16, 16);
+        setBounds(0, 0, 16/ MyGdxGame.PPM, 16/MyGdxGame.PPM);
+        setRegion(marioStand);
     }
 
     /*

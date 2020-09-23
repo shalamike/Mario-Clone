@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -69,6 +70,12 @@ public class PlayScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map, 1/MyGdxGame.PPM); //rendering the map after it has been loaded
         gameCam.position.set(gamePort.getWorldWidth()/2 , gamePort.getWorldHeight()/2, 0);
 
+        //initialising the texture atlas for our animations
+        /*
+         * the pack file in the used by the texture atlas is simply a text file that describes where each
+         * animation image is in the Mario_and_Enemies.png image*/
+        atlas = new TextureAtlas("Mario_and_Enemies.pack");
+
         //initialising box2d variables
         /*
         * the wold class takes 2 parameters,
@@ -78,16 +85,15 @@ public class PlayScreen implements Screen {
         b2dr = new Box2DDebugRenderer(); // the box2dDebugRenderer will show the outlines of all shapes in the game
 
         //initialising the mario/ player
-        player = new Mario(world);
+        player = new Mario(world, this);
 
-        //initialising the texture atlas for our animations
-        /*
-        * the pack file in the used by the texture atlas is simply a text file that describes where each
-        * animation image is in the Mario_and_Enemies.png image*/
-        atlas = new TextureAtlas("Mario_And_Enemies.pack");
 
         new B2WorldCreator(world, map);
 
+    }
+
+    public TextureAtlas getAtlas(){
+        return atlas;
     }
 
     @Override
@@ -102,6 +108,11 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // this line clears the screan to the colur abouve;
 
         renderer.render();
+        //rendering mario
+        game.batch.setProjectionMatrix(gameCam.combined);
+        game.batch.begin();
+        player.draw(game.batch);
+        game.batch.end();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);// this line declares what we are allowed to see in this case its what the camera sees.
         hud.stage.draw();//this line will display the given parameters defined above
