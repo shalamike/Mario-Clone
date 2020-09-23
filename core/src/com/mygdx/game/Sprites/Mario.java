@@ -41,4 +41,8 @@ public class Mario extends Sprite {
         fdef.shape = shape; // setting our shapes radius to the fixure def
         b2dbody.createFixture(fdef); // setting the fixture def to our body.
     }
+
+    public void update(float dt){
+        setPosition(b2dbody.getPosition().x - getWidth() / 2, b2dbody.getPosition().y - getHeight() / 2);
+    }
 }

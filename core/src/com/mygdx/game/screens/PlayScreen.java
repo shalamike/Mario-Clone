@@ -136,6 +136,8 @@ public class PlayScreen implements Screen {
     public void update(float dt){ // this method will update the current scenario of the game based on the user input
         handleInput(dt); // this line will handle any user inputs
 
+        player.update(dt);
+
         /* updating marios motion using the world.step method which takes the following argument sin the following order
         * timeStep - the amount of time to simulate, this should not vary.
         * velocityIterations - for the velocity constraint solver.
