@@ -37,7 +37,7 @@ public class Mario extends Sprite {
         //defining the fixtures
         FixtureDef fdef = new FixtureDef(); // creating a new fixture def
         CircleShape shape = new CircleShape(); // creating a circle for our fixture def for now
-        shape.setRadius(5 / MyGdxGame.PPM); // setting the circles radius to 5
+        shape.setRadius(7 / MyGdxGame.PPM); // setting the circles radius to 5
         fdef.shape = shape; // setting our shapes radius to the fixure def
         b2dbody.createFixture(fdef); // setting the fixture def to our body.
     }
