@@ -22,7 +22,7 @@ public class Mario extends Sprite {
         super(screen.getAtlas().findRegion("little_mario"));
         this.world = world; //
         defineMario();
-        marioStand = new TextureRegion(getTexture(), 0,0,16, 16);
+        marioStand = new TextureRegion(getTexture(), 0,11,16, 16);
         setBounds(0, 0, 16/ MyGdxGame.PPM, 16/MyGdxGame.PPM);
         setRegion(marioStand);
     }
