@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -46,6 +47,8 @@ public class PlayScreen implements Screen {
     private Box2DDebugRenderer b2dr; // a debug renderer gives a graphical representation of fixtures and bodies
     // Mario/player variables
     private Mario player;
+    // animation variables
+    private TextureAtlas atlas;
 
     public PlayScreen(MyGdxGame game){
         this.game = game;
@@ -71,11 +74,17 @@ public class PlayScreen implements Screen {
         * the wold class takes 2 parameters,
         * a vector 2 for the direction of natural forces in the game world i.e gravity
         * a doSleep boolean where if it is true, box2d wont calculate physics for objects that are in rest. Therefore improving performance*/
-        world = new World(new Vector2(0,-10), true);
-        b2dr = new Box2DDebugRenderer();
+        world = new World(new Vector2(0,-10), true);// this line creates a world with some default values for the worlds gravity
+        b2dr = new Box2DDebugRenderer(); // the box2dDebugRenderer will show the outlines of all shapes in the game
 
         //initialising the mario/ player
         player = new Mario(world);
+
+        //initialising the texture atlas for our animations
+        /*
+        * the pack file in the used by the texture atlas is simply a text file that describes where each
+        * animation image is in the Mario_and_Enemies.png image*/
+        atlas = new TextureAtlas("Mario_And_Enemies.pack");
 
         new B2WorldCreator(world, map);
 
