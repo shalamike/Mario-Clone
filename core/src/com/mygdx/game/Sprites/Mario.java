@@ -4,10 +4,13 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MyGdxGame;
@@ -60,6 +63,7 @@ public class Mario extends Sprite {
         marioStand = new TextureRegion(getTexture(), 0,11,16, 16);
         setBounds(0, 0, 16/ MyGdxGame.PPM, 16/MyGdxGame.PPM);
         setRegion(marioStand);
+
     }
 
     /*
@@ -71,17 +75,25 @@ public class Mario extends Sprite {
         b2dbody = world.createBody(bdef);//now we have the box2d body defined, we can create the body in our game world
         //defining the fixtures
         FixtureDef fdef = new FixtureDef(); // creating a new fixture def
-        CircleShape shape = new CircleShape(); // creating a circle for our fixture def for now
-        shape.setRadius(7 / MyGdxGame.PPM); // setting the circles radius to 5
+        PolygonShape shape = new PolygonShape(); // creating a circle for our fixture def for now
+        shape.setAsBox(7 / MyGdxGame.PPM, 7/MyGdxGame.PPM); // setting the circles radius to 5
         fdef.shape = shape; // setting our shapes radius to the fixure def
         b2dbody.createFixture(fdef); // setting the fixture def to our body.
+        //creating a fixture def for the feet to eliminate collisions with segmented blocks
+        EdgeShape feet = new EdgeShape();
+        feet.set(new Vector2(-2/MyGdxGame.PPM, -6 / MyGdxGame.PPM), new Vector2(2/MyGdxGame.PPM, -6 / MyGdxGame.PPM));
+        FixtureDef feetdef = new FixtureDef();
+        feetdef.shape = feet;
+        feetdef.isSensor = false;
+        b2dbody.createFixture(feetdef);
     }
 
     public void update(float dt){
-        setPosition(b2dbody.getPosition().x - getWidth() / 2, b2dbody.getPosition().y - getHeight() / 2);
+        setPosition(b2dbody.getPosition().x - getWidth() / 2, b2dbody.getPosition().y - getHeight() / 2);//setting the image position to the circle
         setRegion(getFrame(dt));
     }
 
+    //this method sets marios animation depending on the players action
     public TextureRegion getFrame(float dt){
         currentState = getState();
         TextureRegion region;
@@ -98,15 +110,19 @@ public class Mario extends Sprite {
                 region = marioStand;
                 break;
         }
-        // checking if mario was running to the left
+        // the next two if statements are only applicable if mario was standing still
+        // checking if mario was running to the left and if  the texture region is not flipped to the left
         if ((b2dbody.getLinearVelocity().x < 0 || !runningRight) && !region.isFlipX()){
             region.flip(true, false);
             runningRight = false;
         }
+        // checking if mario is running to the right and if the region is flipped to the left
+        // note that the region.flip is the same in both statements as in each statement we are checking if he is facing the opposite direction
         else if ((b2dbody.getLinearVelocity().x > 0 || runningRight) && region.isFlipX()){
             region.flip(true, false);
             runningRight = true;
         }
+        // setting the state timer which increments each image from the texturepack per time interval like a flip book
         stateTimer = currentState == previousState ? stateTimer + dt : 0;
         previousState = currentState;
         return region;

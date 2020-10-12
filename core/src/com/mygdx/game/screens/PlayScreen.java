@@ -122,13 +122,17 @@ public class PlayScreen implements Screen {
     }
 
     public void handleInput(float dt){ // this method will handle any of the users input
+        // if the user jumped
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            player.b2dbody.applyLinearImpulse(new Vector2(0,4f), player.b2dbody.getWorldCenter(), true); // with applyLinearImpulse, the first parameter is the direction of the force, the second parameter is the location in the body the force will be applied to (in this case the center), the third parameter will wake the body up if its asleep
-        }// this will just check if the screen has been touched for now
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2dbody.getLinearVelocity().x <= 2){
+            player.b2dbody.applyLinearImpulse(new Vector2(0,4f), player.b2dbody.getWorldCenter(), true);
+            // with applyLinearImpulse, the first parameter is the direction of the force, the second parameter is the location in the body the force will be applied to (in this case the center), the third parameter will wake the body up if its asleep
+        }
+        // if the user moved to the right
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2dbody.getLinearVelocity().x <= 1.5){
             player.b2dbody.applyLinearImpulse(new Vector2(0.1f, 0), player.b2dbody.getWorldCenter(), true);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2dbody.getLinearVelocity().x >= -2){
+        // if the user moved to the left
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2dbody.getLinearVelocity().x >= -1.5){
             player.b2dbody.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2dbody.getWorldCenter(), true);
         }
 
